@@ -40,6 +40,8 @@ defmodule Usher.Web do
       # Core UI components
       import Usher.Web.CoreComponents
 
+      alias Usher.Web.Helpers.DateTimeHelpers
+
       # Shortcut for generating JS commands
       alias Phoenix.LiveView.JS
 

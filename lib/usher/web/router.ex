@@ -52,8 +52,6 @@ defmodule Usher.Web.Router do
   end
 
   def __session__(conn, prefix, live_path, live_transport, csp_key, resolver) do
-    dbg live_transport
-
     csp_keys = expand_csp_nonce_keys(csp_key)
 
     user = Usher.Web.Resolver.call_with_fallback(resolver, :resolve_user, [conn])

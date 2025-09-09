@@ -221,21 +221,29 @@ defmodule Usher.Web.CoreComponents do
   """
   attr :type, :string, default: nil
   attr :class, :string, default: nil
+  attr :variant, :string, default: "default"
   attr :rest, :global, include: ~w(disabled form name value)
 
   slot :inner_block, required: true
 
   def button(assigns) do
+    assigns =
+      assign_new(assigns, :variant_class, fn ->
+        base_classes =
+          case assigns.variant do
+            "light" ->
+              "rounded-md bg-white dark:bg-transparent px-3.5 py-2.5 text-sm font-semibold text-gray-900 dark:text-gray-100 shadow-sm ring-1 ring-inset ring-gray-300 dark:ring-gray-600 hover:bg-gray-50 dark:hover:bg-white/10"
+
+            _ ->
+              "phx-submit-loading:opacity-75 rounded-md bg-pink-600 px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-pink-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-pink-600"
+          end
+
+        # Add disabled styles
+        base_classes <> " disabled:opacity-50 disabled:cursor-not-allowed"
+      end)
+
     ~H"""
-    <button
-      type={@type}
-      class={[
-        "phx-submit-loading:opacity-75 rounded-lg bg-zinc-900 hover:bg-zinc-700 py-2 px-3",
-        "text-sm font-semibold leading-6 text-white active:text-white/80",
-        @class
-      ]}
-      {@rest}
-    >
+    <button type={@type} class={[@variant_class, @class]} {@rest}>
       {render_slot(@inner_block)}
     </button>
     """
@@ -472,49 +480,51 @@ defmodule Usher.Web.CoreComponents do
       end
 
     ~H"""
-    <div class="overflow-y-auto px-4 sm:overflow-visible sm:px-0">
-      <table class="w-[40rem] mt-11 sm:w-full">
-        <thead class="text-sm text-left leading-6 text-zinc-500">
-          <tr>
-            <th :for={col <- @col} class="p-0 pb-4 pr-6 font-normal">{col[:label]}</th>
-            <th :if={@action != []} class="relative p-0 pb-4">
-              <span class="sr-only">{"Actions"}</span>
-            </th>
-          </tr>
-        </thead>
-        <tbody
-          id={@id}
-          phx-update={match?(%Phoenix.LiveView.LiveStream{}, @rows) && "stream"}
-          class="relative divide-y divide-zinc-100 border-t border-zinc-200 text-sm leading-6 text-zinc-700"
-        >
-          <tr :for={row <- @rows} id={@row_id && @row_id.(row)} class="group hover:bg-zinc-50">
-            <td
-              :for={{col, i} <- Enum.with_index(@col)}
-              phx-click={@row_click && @row_click.(row)}
-              class={["relative p-0", @row_click && "hover:cursor-pointer"]}
-            >
-              <div class="block py-4 pr-6">
-                <span class="absolute -inset-y-px right-0 -left-4 group-hover:bg-zinc-50 sm:rounded-l-xl" />
-                <span class={["relative", i == 0 && "font-semibold text-zinc-900"]}>
-                  {render_slot(col, @row_item.(row))}
-                </span>
-              </div>
-            </td>
-            <td :if={@action != []} class="relative w-14 p-0">
-              <div class="relative whitespace-nowrap py-4 text-right text-sm font-medium">
-                <span class="absolute -inset-y-px -right-4 left-0 group-hover:bg-zinc-50 sm:rounded-r-xl" />
-                <span
-                  :for={action <- @action}
-                  class="relative ml-4 font-semibold leading-6 text-zinc-900 hover:text-zinc-700"
-                >
-                  {render_slot(action, @row_item.(row))}
-                </span>
-              </div>
-            </td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
+    <table class="min-w-full divide-y divide-zinc-200 dark:divide-zinc-700">
+      <thead class="bg-zinc-50 dark:bg-zinc-800">
+        <tr>
+          <th
+            :for={col <- @col}
+            scope="col"
+            class="px-6 py-3 text-left text-xs font-medium text-zinc-500 dark:text-zinc-400 uppercase tracking-wider"
+          >
+            {col[:label]}
+          </th>
+          <th :if={@action != []} class="relative px-6 py-3">
+            <span class="sr-only">{"Actions"}</span>
+          </th>
+        </tr>
+      </thead>
+      <tbody
+        id={@id}
+        phx-update={match?(%Phoenix.LiveView.LiveStream{}, @rows) && "stream"}
+        class="bg-white dark:bg-zinc-900 divide-y divide-zinc-200 dark:divide-zinc-700"
+      >
+        <tr :for={row <- @rows} id={@row_id && @row_id.(row)}>
+          <td
+            :for={{col, i} <- Enum.with_index(@col)}
+            phx-click={@row_click && @row_click.(row)}
+            class="px-6 py-4 whitespace-nowrap"
+          >
+            <div class="block py-4 pr-6">
+              <span class={["relative", i == 0 && "font-semibold text-zinc-900 dark:text-zinc-100"]}>
+                {render_slot(col, @row_item.(row))}
+              </span>
+            </div>
+          </td>
+          <td
+            :if={@action != []}
+            class="relative whitespace-nowrap py-4 text-right text-sm font-medium"
+          >
+            <div class="flex justify-end space-x-2">
+              <span :for={action <- @action}>
+                {render_slot(action, @row_item.(row))}
+              </span>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
     """
   end
 
@@ -593,6 +603,58 @@ defmodule Usher.Web.CoreComponents do
   def icon(%{name: "hero-" <> _} = assigns) do
     ~H"""
     <span class={[@name, @class]} />
+    """
+  end
+
+  @doc """
+  Renders a theme toggle button that switches between light and dark modes.
+  Shows sun icon in dark mode (to switch to light) and moon icon in light mode (to switch to dark).
+  """
+  attr :rest, :global
+
+  def theme_selector(assigns) do
+    ~H"""
+    <div class="relative" id="theme-selector" phx-hook="ThemeSelector" {@rest}>
+      <button
+        type="button"
+        class="rounded-full p-2 text-gray-500 hover:text-gray-900 hover:bg-gray-100 dark:text-gray-400 dark:hover:text-gray-100 dark:hover:bg-gray-700 transition-colors duration-200"
+        aria-label="Theme selector"
+        data-dropdown-trigger
+      >
+        <.icon name="hero-sun" class="h-5 w-5" data-theme="light" />
+        <.icon name="hero-moon" class="h-5 w-5 hidden" data-theme="dark" />
+        <.icon name="hero-monitor" class="h-5 w-5 hidden" data-theme="system" />
+      </button>
+
+      <div
+        class="absolute right-0 top-full mt-2 w-48 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-md shadow-lg z-50 hidden"
+        data-dropdown-menu
+      >
+        <div class="py-1">
+          <button
+            type="button"
+            class="flex items-center w-full px-3 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
+            data-theme-option="light"
+          >
+            <.icon name="hero-sun" class="h-4 w-4 mr-3" /> Light
+          </button>
+          <button
+            type="button"
+            class="flex items-center w-full px-3 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
+            data-theme-option="dark"
+          >
+            <.icon name="hero-moon" class="h-4 w-4 mr-3" /> Dark
+          </button>
+          <button
+            type="button"
+            class="flex items-center w-full px-3 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
+            data-theme-option="system"
+          >
+            <.icon name="hero-monitor" class="h-4 w-4 mr-3" /> System
+          </button>
+        </div>
+      </div>
+    </div>
     """
   end
 

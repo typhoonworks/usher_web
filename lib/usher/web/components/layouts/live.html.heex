@@ -1,19 +1,33 @@
 <meta name="live-transport" content={@live_transport} />
 <meta name="live-path" content={@live_path} />
 
-<main class="p-4 min-h-screen flex flex-col">
-  <header class="flex items-center">
-    <div class="md:w-84 mr-3">
-      <.logo />
+<div class="flex flex-col min-h-screen sm:h-screen sm:overflow-hidden bg-red-50 dark:bg-gray-900">
+  <div id="platform-scout" phx-hook="PlatformScout" style="display: none;"></div>
+  <nav class="border-b border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800">
+    <div class="mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex h-16 justify-between">
+        <div class="flex">
+          <div class="flex items-center">
+            <.logo />
+          </div>
+        </div>
+        <div class="flex items-center space-x-2 sm:space-x-4">
+          <%!-- <.link navigate={lotus_path([:queries, "new"])} class="flex items-center h-full">
+            <.button type="button" class="text-sm sm:text-base">New Query</.button>
+          </.link> --%>
+          <.theme_selector />
+        </div>
+      </div>
     </div>
-  </header>
+  </nav>
 
-  <main class="px-4 py-20 sm:px-6 lg:px-8">
-    <div class="mx-auto max-w-2xl">
-      <.flash_group flash={@flash} />
+  <main class="flex-1 min-h-0">
+    <.flash flash={@flash} kind={:info} />
+    <.flash flash={@flash} kind={:error} />
+    <div class="h-full sm:overflow-hidden">
       {@inner_content}
     </div>
   </main>
 
-  <.footer />
-</main>
+  <.footer class="dark:bg-gray-900 dark:text-gray-300" />
+</div>

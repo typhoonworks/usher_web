@@ -9,7 +9,7 @@ defmodule Usher.Dev.Migration do
 
   def change do
     # Set latest migration version for Usher.
-    Usher.Migration.migrate_to_version(4)
+    Usher.Migration.migrate_to_version(5)
   end
 end
 
@@ -90,8 +90,7 @@ Application.put_env(:usher_web, Usher.Dev.Repo,
   password: "postgres",
   hostname: "localhost",
   port: 2345,
-  database: "usher_dev",
-  username: "usher_web_dev"
+  database: "usher_web_dev"
 )
 
 Application.put_env(:phoenix, :serve_endpoints, true)
@@ -109,7 +108,9 @@ Task.async(fn ->
     {Usher.Dev.Endpoint, []}
   ]
 
-  Ecto.Adapters.Postgres.storage_up(Usher.Dev.Repo.config())
+  # Reset the DB
+  :ok = Ecto.Adapters.Postgres.storage_down(Usher.Dev.Repo.config())
+  :ok = Ecto.Adapters.Postgres.storage_up(Usher.Dev.Repo.config())
 
   {:ok, _pid} = Supervisor.start_link(children, strategy: :one_for_one)
 
@@ -119,6 +120,15 @@ Task.async(fn ->
     :up,
     all: true
   )
+
+  {:ok, _invitation} = Usher.create_invitation(%{name: "Test Invitation"})
+  {:ok, _invitation} = Usher.create_invitation(%{name: "Never Expiring Invitation", expires_at: nil})
+
+  # Expired invitation must be inserted into the DB directly
+  # because Usher.create_invitation/1 prevents creating already expired invitations.
+  %Usher.Invitation{expires_at: ~U[2023-01-01 00:00:00Z]}
+  |> Usher.Invitation.changeset(%{name: "Expired Invitation", token: "1GObHRAADoU4Mno2"})
+  |> Usher.Dev.Repo.insert!()
 
   IO.puts("✅ Database setup complete!")
   IO.puts("🌐 Web server running on http://localhost:#{port}/usher")
