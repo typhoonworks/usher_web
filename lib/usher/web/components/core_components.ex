@@ -600,9 +600,11 @@ defmodule Usher.Web.CoreComponents do
   attr :name, :string, required: true
   attr :class, :string, default: nil
 
+  attr :rest, :global
+
   def icon(%{name: "hero-" <> _} = assigns) do
     ~H"""
-    <span class={[@name, @class]} />
+    <span class={[@name, @class]} {@rest} />
     """
   end
 
@@ -621,9 +623,9 @@ defmodule Usher.Web.CoreComponents do
         aria-label="Theme selector"
         data-dropdown-trigger
       >
-        <.icon name="hero-sun" class="h-5 w-5" data-theme="light" />
-        <.icon name="hero-moon" class="h-5 w-5 hidden" data-theme="dark" />
-        <.icon name="hero-monitor" class="h-5 w-5 hidden" data-theme="system" />
+        <.icon name="hero-sun" class="h-5 w-5 theme-icon" data-theme="light" />
+        <.icon name="hero-moon" class="h-5 w-5 theme-icon hidden" data-theme="dark" />
+        <.icon name="hero-computer-desktop" class="h-5 w-5 theme-icon hidden" data-theme="system" />
       </button>
 
       <div
@@ -650,7 +652,7 @@ defmodule Usher.Web.CoreComponents do
             class="flex items-center w-full px-3 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
             data-theme-option="system"
           >
-            <.icon name="hero-monitor" class="h-4 w-4 mr-3" /> System
+            <.icon name="hero-computer-desktop" class="h-4 w-4 mr-3" /> System
           </button>
         </div>
       </div>

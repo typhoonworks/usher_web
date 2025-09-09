@@ -1,0 +1,3 @@
+[*.{ex,exs,js,css,html,heex}]
+indent_size = 2
+indent_style = space
