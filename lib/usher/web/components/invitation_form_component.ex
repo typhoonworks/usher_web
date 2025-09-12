@@ -210,7 +210,7 @@ defmodule Usher.Web.Components.InvitationFormComponent do
   defp create_invitation(socket, invitation_attrs) do
     case Usher.create_invitation(invitation_attrs) do
       {:ok, invitation} ->
-        send_update(socket.assigns.save_target, new_invitation: invitation)
+        notify_parent({:saved, invitation})
 
         {:noreply,
          socket
@@ -235,4 +235,6 @@ defmodule Usher.Web.Components.InvitationFormComponent do
       nil
     end
   end
+
+  defp notify_parent(msg), do: send(self(), {__MODULE__, msg})
 end

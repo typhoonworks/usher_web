@@ -18,9 +18,8 @@ defmodule Usher.Web.Router do
         {session_name, session_opts, route_opts} = Usher.Web.Router.__options__(prefix, opts)
 
         live_session session_name, session_opts do
-          live "/", Usher.Web.DashboardLive, :index, route_opts
-          live "/new", Usher.Web.DashboardLive, :new, route_opts
-          live "/:id", Usher.Web.DashboardLive, :show, route_opts
+          live "/", Usher.Web.Live.InvitationsList, :index, route_opts
+          live "/new", Usher.Web.Live.InvitationsList, :new, route_opts
         end
       end
     end

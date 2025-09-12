@@ -1,9 +1,10 @@
-defmodule Usher.Web.Pages.InvitationsListPage do
-  use Usher.Web, :live_component
+defmodule Usher.Web.Live.InvitationsList do
+  use Usher.Web, :live_view
 
   alias Usher.Invitation
+  alias Usher.Web.Components.InvitationFormComponent
 
-  @impl Phoenix.LiveComponent
+  @impl Phoenix.LiveView
   def render(assigns) do
     ~H"""
     <div class="space-y-8">
@@ -61,7 +62,7 @@ defmodule Usher.Web.Pages.InvitationsListPage do
                 id={"copy-invitation-token-link-#{id}"}
                 variant="light"
                 class="text-zinc-700 bg-zinc-100 hover:bg-zinc-200 px-2 py-1"
-                phx-hook="Clipboard"
+                phx-hook="CopyToClipboard"
                 data-clipboard-text={token_link(invitation)}
                 title="Copy invitation link"
               >
@@ -106,7 +107,6 @@ defmodule Usher.Web.Pages.InvitationsListPage do
           title={if @live_action == :new, do: "New Invitation", else: "Edit Invitation"}
           action={@live_action}
           invitation={@invitation}
-          save_target={@myself}
         />
       </.modal>
 
@@ -141,8 +141,26 @@ defmodule Usher.Web.Pages.InvitationsListPage do
     """
   end
 
-  @impl Phoenix.LiveComponent
-  def mount(socket) do
+  @impl Phoenix.LiveView
+  def mount(params, session, socket) do
+    %{
+      "prefix" => prefix,
+      "live_path" => live_path,
+      "live_transport" => live_transport,
+      "csp_nonces" => csp_nonces,
+      "resolver" => resolver
+    } = session
+
+    Process.put(:routing, {socket, prefix})
+
+    socket =
+      socket
+      |> assign(params: params)
+      |> assign(live_path: live_path, live_transport: live_transport)
+      |> assign(:page_title, "Usher Dashboard")
+      |> assign(:csp_nonces, csp_nonces)
+      |> assign(:resolver, resolver)
+
     invitations =
       Usher.list_invitations()
       |> Enum.map(&add_usage_count/1)
@@ -155,33 +173,39 @@ defmodule Usher.Web.Pages.InvitationsListPage do
     {:ok, socket}
   end
 
-  @impl Phoenix.LiveComponent
-  def update(%{live_action: :new}, socket) do
-    socket =
-      socket
-      |> assign(:invitation, %Invitation{})
-      |> assign(:live_action, :new)
-
-    {:ok, socket}
+  @impl Phoenix.LiveView
+  def handle_params(params, _url, socket) do
+    {:noreply, apply_action(socket, socket.assigns.live_action, params)}
   end
 
-  @impl Phoenix.LiveComponent
-  def update(%{new_invitation: new_invitation}, socket) do
+  defp apply_action(socket, :index, _params) do
+    socket
+    |> assign(:invitation, nil)
+  end
+
+  defp apply_action(socket, :new, _params) do
+    socket
+    |> assign(:invitation, %Invitation{})
+  end
+
+  @impl Phoenix.LiveView
+  def handle_info({InvitationFormComponent, {:saved, %Invitation{} = new_invitation}}, socket) do
     new_invitation = add_usage_count(new_invitation)
 
     socket =
       socket
       |> stream_insert(:invitations, new_invitation, at: 0)
 
-    {:ok, socket}
+    {:noreply, socket}
   end
 
-  def update(assigns, socket) do
+  @impl Phoenix.LiveView
+  def handle_event("copy-to-clipboard-success", _, socket) do
     socket =
       socket
-      |> assign(assigns)
+      |> put_flash(:info, "Token link copied to clipboard")
 
-    {:ok, socket}
+    {:noreply, socket}
   end
 
   defp token_link(invitation) do
