@@ -51,6 +51,7 @@ defmodule Usher.Web.MixProject do
 
       # Tests
       {:floki, ">= 0.30.0", only: :test},
+      {:lazy_html, ">= 0.1.0", only: :test},
       {:mimic, "~> 2.1", only: :test},
 
       # Development
