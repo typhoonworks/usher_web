@@ -14,7 +14,7 @@ defmodule Usher.Web.Resolver do
   @doc """
   Extract the current user from a Plug.Conn when the dashboard mounts.
 
-  This callback is invoked when the Lotus dashboard is accessed. The returned
+  This callback is invoked when the Usher dashboard is accessed. The returned
   user value will be passed to other callbacks for access control decisions.
   """
   @callback resolve_user(conn :: Plug.Conn.t()) :: user()
@@ -23,11 +23,11 @@ defmodule Usher.Web.Resolver do
   Determine the access level for a user.
 
   Based on the user returned from `resolve_user/1`, this callback determines
-  what operations the user can perform in the Lotus dashboard.
+  what operations the user can perform in the Usher dashboard.
 
   ## Return Values
 
-  - `:all` - Full access to all Lotus features
+  - `:all` - Full access to all Usher's features
   - `:read_only` - Can only view and run queries, no modifications
   - `:forbidden` - No access
   - `{:forbidden, path}` - Redirect to the given path

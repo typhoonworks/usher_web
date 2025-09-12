@@ -17,7 +17,7 @@ erl_crash.dump
 *.ez
 
 # Ignore package tarball (built via "mix hex.build").
-lotus_web-*.tar
+usher_web-*.tar
 
 # Temporary files, for example, from tests.
 /tmp/

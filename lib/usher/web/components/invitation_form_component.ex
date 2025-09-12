@@ -279,7 +279,6 @@ defmodule Usher.Web.Components.InvitationFormComponent do
   end
 
   defp convert_expires_on_to_expires_at(expires_on, set_expiration, timezone) do
-    dbg {expires_on, set_expiration, timezone}
     if set_expiration && expires_on && expires_on != "" do
       date_to_end_of_day_utc!(expires_on, timezone)
     else
