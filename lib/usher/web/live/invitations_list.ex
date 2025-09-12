@@ -3,7 +3,7 @@ defmodule Usher.Web.Live.InvitationsList do
 
   alias Usher.Invitation
   alias Usher.Web.Components.InvitationFormComponent
-  
+
   import Usher.Web.Helpers.DateTimeHelpers
 
   @impl Phoenix.LiveView

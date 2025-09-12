@@ -46,7 +46,8 @@ defmodule Usher.Web.Test.InvitationFixtures do
   end
 
   def add_usage_to_invitation(invitation) do
-    {:ok, usage} = Usher.track_invitation_usage(invitation, :user, Ecto.UUID.generate(), :registered)
+    {:ok, usage} =
+      Usher.track_invitation_usage(invitation, :user, Ecto.UUID.generate(), :registered)
 
     usage
   end

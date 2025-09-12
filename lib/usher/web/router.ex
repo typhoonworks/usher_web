@@ -77,7 +77,6 @@ defmodule Usher.Web.Router do
     }
   end
 
-
   def on_mount(:usher_on_mount_hook, _params, session, socket) do
     %{
       "prefix" => prefix,
