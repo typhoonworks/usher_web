@@ -61,8 +61,6 @@ defmodule Usher.Web.Helpers.DateTimeHelpers do
     "In #{years} years"
   end
 
-  defp format_duration(s) when s < 0, do: "Expired"
-
   def current_date(timezone \\ "Etc/UTC"), do: DateTime.now!(timezone) |> DateTime.to_date()
 
   @doc """

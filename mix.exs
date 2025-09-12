@@ -13,13 +13,17 @@ defmodule Usher.Web.MixProject do
     ]
   end
 
+  def cli do
+    [preferred_envs: ["test.setup": :test, test: :test]]
+  end
+
   # Configuration for the OTP application.
   #
   # Type `mix help compile.app` for more information.
   def application do
     [
-      mod: {Usher.Web.Application, []},
-      extra_applications: [:logger, :runtime_tools]
+      extra_applications: [:logger, :runtime_tools],
+      mod: {Usher.Web.Application, []}
     ]
   end
 
@@ -47,6 +51,7 @@ defmodule Usher.Web.MixProject do
 
       # Tests
       {:floki, ">= 0.30.0", only: :test},
+      {:mimic, "~> 2.1", only: :test},
 
       # Development
       {:bandit, "~> 1.5"},
@@ -83,6 +88,11 @@ defmodule Usher.Web.MixProject do
         "tailwind usher_web --minify",
         "esbuild usher_web --minify",
         "phx.digest"
+      ],
+      "test.setup": [
+        "ecto.drop --quiet",
+        "ecto.create",
+        "ecto.migrate --migrations-path test/support/migrations"
       ]
     ]
   end
