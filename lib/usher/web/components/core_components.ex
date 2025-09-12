@@ -475,6 +475,7 @@ defmodule Usher.Web.CoreComponents do
   end
 
   slot :action, doc: "the slot for showing user actions in the last table column"
+  slot :empty_state, doc: "the slot for display when there are no rows"
 
   def table(assigns) do
     assigns =
@@ -503,6 +504,11 @@ defmodule Usher.Web.CoreComponents do
         phx-update={match?(%Phoenix.LiveView.LiveStream{}, @rows) && "stream"}
         class="bg-white dark:bg-zinc-900 divide-y divide-zinc-200 dark:divide-zinc-700"
       >
+        <tr id={"#{@id}-table-empty-state"} class="only:table-row hidden">
+          <td colspan={length(@col) + if(@action != [], do: 1, else: 0)} class="px-6 py-4">
+            {render_slot(@empty_state)}
+          </td>
+        </tr>
         <tr :for={row <- @rows} id={@row_id && @row_id.(row)}>
           <td
             :for={{col, i} <- Enum.with_index(@col)}

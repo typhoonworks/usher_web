@@ -3,6 +3,8 @@ defmodule Usher.Web.Live.InvitationsList do
 
   alias Usher.Invitation
   alias Usher.Web.Components.InvitationFormComponent
+  
+  import Usher.Web.Helpers.DateTimeHelpers
 
   @impl Phoenix.LiveView
   def render(assigns) do
@@ -92,6 +94,24 @@ defmodule Usher.Web.Live.InvitationsList do
               </.button>
             </div>
           </:action>
+          <:empty_state>
+            <div class="px-3 py-6 text-center">
+              <.icon name="hero-inbox" class="mx-auto h-12 w-12 text-zinc-400" />
+              <h3 class="mt-4 text-lg font-medium text-zinc-900 dark:text-zinc-200">
+                No invitations yet
+              </h3>
+              <p class="mt-2 text-sm text-zinc-600 dark:text-zinc-400">
+                Get started by creating your first invitation.
+              </p>
+              <div class="mt-6">
+                <.link patch={usher_path([:new])}>
+                  <.button variant="primary">
+                    New Invitation
+                  </.button>
+                </.link>
+              </div>
+            </div>
+          </:empty_state>
         </.table>
       </div>
 
