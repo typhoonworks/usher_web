@@ -23,10 +23,12 @@ import { LiveSocket } from "phoenix_live_view";
 import topbar from "../vendor/topbar";
 import ThemeSelector from "./src/hooks/theme_selector";
 import GetUserTimezone from "./src/hooks/get_user_timezone";
+import CopyToClipboard from "./src/hooks/copy_to_clipboard";
 
 const hooks = {
   ThemeSelector,
   GetUserTimezone,
+  CopyToClipboard,
 };
 
 let csrfToken = document
