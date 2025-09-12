@@ -1,4 +1,4 @@
-defmodule Usher.Web.Test.Router do
+defmodule Usher.Web.TestRouter do
   use Phoenix.Router
 
   import Usher.Web.Router
@@ -25,7 +25,7 @@ defmodule Usher.Web.Test.Endpoint do
     key: "_usher_web_key",
     signing_salt: "5Ralb9W4sku"
 
-  plug Usher.Web.Test.Router
+  plug Usher.Web.TestRouter
 end
 
 defmodule Usher.Web.Test.ErrorHTML do

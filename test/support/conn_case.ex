@@ -16,7 +16,7 @@ defmodule Usher.Web.ConnCase do
       import Usher.Web.DataCase
 
       alias Usher.Web.TestRepo
-      alias Usher.Web.Test.Router
+      alias Usher.Web.TestRouter
 
       @endpoint Usher.Web.Test.Endpoint
     end

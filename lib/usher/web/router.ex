@@ -1,6 +1,8 @@
 defmodule Usher.Web.Router do
   @moduledoc false
 
+  import Phoenix.Component, only: [assign: 2, assign: 3]
+
   @default_opts [
     socket_path: "/live",
     transport: :websocket,
@@ -91,11 +93,11 @@ defmodule Usher.Web.Router do
 
     socket =
       socket
-      |> Phoenix.Component.assign(live_path: live_path, live_transport: live_transport)
-      |> Phoenix.Component.assign(:page_title, "Usher Dashboard")
-      |> Phoenix.Component.assign(:csp_nonces, csp_nonces)
-      |> Phoenix.Component.assign(:resolver, resolver)
-      |> Phoenix.Component.assign(user: user, access: access)
+      |> assign(live_path: live_path, live_transport: live_transport)
+      |> assign(:page_title, "Usher Dashboard")
+      |> assign(:csp_nonces, csp_nonces)
+      |> assign(:resolver, resolver)
+      |> assign(user: user, access: access)
 
     {:cont, socket}
   end

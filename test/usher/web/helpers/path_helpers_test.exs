@@ -141,6 +141,6 @@ defmodule Usher.Web.Helpers.PathHelpersTest do
     send(view.pid, {:send_socket, self()})
     assert_receive {:socket, socket}
 
-    %Phoenix.LiveView.Socket{socket | router: Usher.Web.Test.Router}
+    %Phoenix.LiveView.Socket{socket | router: Usher.Web.TestRouter}
   end
 end
