@@ -17,12 +17,11 @@ defmodule Usher.Web.DashboardLive do
 
     socket =
       socket
-      |> assign(page: page)
+      |> assign(params: params, page: page)
       |> assign(live_path: live_path, live_transport: live_transport)
       |> assign(:page_title, "Usher Dashboard")
       |> assign(:csp_nonces, csp_nonces)
       |> assign(:resolver, resolver)
-      |> page.component.handle_mount()
 
     {:ok, socket}
   end
@@ -30,8 +29,13 @@ defmodule Usher.Web.DashboardLive do
   @impl Phoenix.LiveView
   def render(assigns) do
     ~H"""
-    <.live_component id="page" module={@page.component} {assigns} />
+    <.live_component id="page" module={@page.component} live_action={@live_action} />
     """
+  end
+
+  @impl Phoenix.LiveView
+  def handle_params(_params, _url, socket) do
+    {:noreply, socket}
   end
 
   defp resolve_page(%{"page" => "invitations"}),

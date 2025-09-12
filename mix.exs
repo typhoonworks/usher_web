@@ -32,6 +32,8 @@ defmodule Usher.Web.MixProject do
   # Type `mix help deps` for examples and options.
   defp deps do
     [
+      {:tzdata, "~> 1.1"},
+
       # Phoenix
       {:jason, "~> 1.2"},
       {:phoenix, "~> 1.7.21"},
@@ -59,7 +61,8 @@ defmodule Usher.Web.MixProject do
        depth: 1},
       {:phoenix_live_reload, "~> 1.2", only: :dev},
       {:postgrex, "~> 0.20", only: [:dev, :test]},
-      {:tailwind, "~> 0.3.0", runtime: Mix.env() == :dev}
+      {:tailwind, "~> 0.3.0", runtime: Mix.env() == :dev},
+      {:tidewave, "~> 0.5", only: :dev}
     ]
   end
 

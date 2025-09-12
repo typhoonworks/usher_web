@@ -19,6 +19,7 @@ defmodule Usher.Web.Router do
 
         live_session session_name, session_opts do
           live "/", Usher.Web.DashboardLive, :index, route_opts
+          live "/new", Usher.Web.DashboardLive, :new, route_opts
           live "/:id", Usher.Web.DashboardLive, :show, route_opts
         end
       end

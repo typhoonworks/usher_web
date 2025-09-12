@@ -9,6 +9,8 @@ defmodule Usher.Web.Helpers.DateTimeHelpers do
   @month @day * 30
   @year @day * 365
 
+  @end_of_day_time ~T[23:59:59.999999]
+
   def time_left_until(datetime) do
     now = DateTime.utc_now()
 
@@ -60,4 +62,30 @@ defmodule Usher.Web.Helpers.DateTimeHelpers do
   end
 
   defp format_duration(s) when s < 0, do: "Expired"
+
+  def current_date(timezone \\ "Etc/UTC"), do: DateTime.now!(timezone) |> DateTime.to_date()
+
+  @doc """
+  Converts a date string to end of day UTC datetime in the specified timezone.
+
+  ## Examples
+
+      iex> date_to_end_of_day_utc("2025-02-16", "America/New_York")
+      ~U[2025-02-17 04:59:59.999999Z]
+
+      iex> date_to_end_of_day_utc("2025-02-16", "Europe/Lisbon")
+      ~U[2025-02-16 23:59:59.999999Z]
+  """
+  def date_to_end_of_day_utc!(date_string, timezone)
+      when is_binary(date_string) and date_string != "" do
+    case Date.from_iso8601(date_string) do
+      {:ok, date} ->
+        DateTime.new!(date, @end_of_day_time, timezone)
+
+      _ ->
+        nil
+    end
+  end
+
+  def date_to_end_of_day_utc!(_, _), do: nil
 end

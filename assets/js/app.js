@@ -22,9 +22,11 @@ import { Socket } from "phoenix";
 import { LiveSocket } from "phoenix_live_view";
 import topbar from "../vendor/topbar";
 import ThemeSelector from "./src/hooks/theme_selector";
+import GetUserTimezone from "./src/hooks/get_user_timezone";
 
 const hooks = {
   ThemeSelector,
+  GetUserTimezone,
 };
 
 let csrfToken = document

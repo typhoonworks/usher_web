@@ -40,22 +40,11 @@ defmodule Usher.Web do
       # Core UI components
       import Usher.Web.CoreComponents
 
-      alias Usher.Web.Helpers.DateTimeHelpers
-
       # Shortcut for generating JS commands
       alias Phoenix.LiveView.JS
 
-      # Routes generation with the ~p sigil
-      unquote(verified_routes())
-    end
-  end
-
-  def verified_routes do
-    quote do
-      use Phoenix.VerifiedRoutes,
-        endpoint: Usher.Web.Endpoint,
-        router: Usher.Web.Router,
-        statics: Usher.Web.static_paths()
+      import Usher.Web.Helpers.DateTimeHelpers
+      import Usher.Web.Helpers.PathHelpers
     end
   end
 

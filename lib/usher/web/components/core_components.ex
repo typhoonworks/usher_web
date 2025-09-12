@@ -235,7 +235,7 @@ defmodule Usher.Web.CoreComponents do
               "rounded-md bg-white dark:bg-transparent px-3.5 py-2.5 text-sm font-semibold text-gray-900 dark:text-gray-100 shadow-sm ring-1 ring-inset ring-gray-300 dark:ring-gray-600 hover:bg-gray-50 dark:hover:bg-white/10"
 
             _ ->
-              "phx-submit-loading:opacity-75 rounded-md bg-pink-600 px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-pink-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-pink-600"
+              "phx-submit-loading:opacity-75 rounded-md bg-blue-600 px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-blue-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600"
           end
 
         # Add disabled styles
@@ -709,7 +709,5 @@ defmodule Usher.Web.CoreComponents do
     |> JS.pop_focus()
   end
 
-  def inspect_error({msg, _opts}) do
-    msg
-  end
+  def inspect_error({msg, _opts}), do: msg
 end

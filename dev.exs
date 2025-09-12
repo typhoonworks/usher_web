@@ -35,6 +35,10 @@ defmodule Usher.Dev.Endpoint do
   socket "/live", Phoenix.LiveView.Socket
   socket "/phoenix/live_reload/socket", Phoenix.LiveReloader.Socket
 
+  if Code.ensure_loaded?(Tidewave) do
+    plug Tidewave, allow_remote_access: true
+  end
+
   plug Phoenix.LiveReloader
   plug Phoenix.CodeReloader
 
@@ -122,7 +126,9 @@ Task.async(fn ->
   )
 
   {:ok, _invitation} = Usher.create_invitation(%{name: "Test Invitation"})
-  {:ok, _invitation} = Usher.create_invitation(%{name: "Never Expiring Invitation", expires_at: nil})
+
+  {:ok, _invitation} =
+    Usher.create_invitation(%{name: "Never Expiring Invitation", expires_at: nil})
 
   # Expired invitation must be inserted into the DB directly
   # because Usher.create_invitation/1 prevents creating already expired invitations.

@@ -14,6 +14,8 @@ config :logger, :console, format: "$time $metadata[$level] $message\n"
 # Use Jason for JSON parsing in Phoenix
 config :phoenix, :json_library, Jason
 
+config :elixir, :time_zone_database, Tzdata.TimeZoneDatabase
+
 if config_env() == :dev do
   # Set a higher stacktrace during development. Avoid configuring such
   # in production as building large stacktraces may be expensive.
@@ -25,6 +27,7 @@ if config_env() == :dev do
   config :phoenix_live_view,
     # Include HEEx debug annotations as HTML comments in rendered markup
     debug_heex_annotations: true,
+    debug_attributes: true,
     # Enable helpful, but potentially expensive runtime checks
     enable_expensive_runtime_checks: true
 

@@ -1,6 +1,8 @@
 defmodule Usher.Web.Pages.InvitationsListPage do
   use Usher.Web, :live_component
 
+  alias Usher.Invitation
+
   @impl Phoenix.LiveComponent
   def render(assigns) do
     ~H"""
@@ -13,13 +15,6 @@ defmodule Usher.Web.Pages.InvitationsListPage do
           <p class="mt-1 text-sm text-zinc-600 dark:text-zinc-400">
             View and manage invitations.
           </p>
-        </div>
-        <div class="mt-4 flex md:ml-4 md:mt-0">
-          <%!-- <.link navigate={~p"/admin/invitations/new"}>
-            <.button>
-              <.icon name="hero-plus" class="size-5 mr-1" /> New Invitation
-            </.button>
-          </.link> --%>
         </div>
       </div>
 
@@ -103,17 +98,16 @@ defmodule Usher.Web.Pages.InvitationsListPage do
         :if={@live_action in [:new, :edit]}
         id="invitation-modal"
         show
+        on_cancel={JS.patch(usher_path())}
       >
-        <%!-- on_cancel={JS.patch(~p"/admin/invitations")} --%>
         <.live_component
-          module={AccomplishWeb.InvitationLive.FormComponent}
+          module={Usher.Web.Components.InvitationFormComponent}
           id={@invitation.id || :new}
           title={if @live_action == :new, do: "New Invitation", else: "Edit Invitation"}
           action={@live_action}
           invitation={@invitation}
-          timezone={@timezone}
+          save_target={@myself}
         />
-        <%!-- patch={~p"/admin/invitations"} --%>
       </.modal>
 
       <.modal
@@ -147,14 +141,47 @@ defmodule Usher.Web.Pages.InvitationsListPage do
     """
   end
 
-  def handle_mount(socket) do
+  @impl Phoenix.LiveComponent
+  def mount(socket) do
     invitations =
       Usher.list_invitations()
       |> Enum.map(&add_usage_count/1)
 
-    socket
-    |> assign(:delete_confirmation, nil)
-    |> stream(:invitations, invitations)
+    socket =
+      socket
+      |> assign(:delete_confirmation, nil)
+      |> stream(:invitations, invitations)
+
+    {:ok, socket}
+  end
+
+  @impl Phoenix.LiveComponent
+  def update(%{live_action: :new}, socket) do
+    socket =
+      socket
+      |> assign(:invitation, %Invitation{})
+      |> assign(:live_action, :new)
+
+    {:ok, socket}
+  end
+
+  @impl Phoenix.LiveComponent
+  def update(%{new_invitation: new_invitation}, socket) do
+    new_invitation = add_usage_count(new_invitation)
+
+    socket =
+      socket
+      |> stream_insert(:invitations, new_invitation, at: 0)
+
+    {:ok, socket}
+  end
+
+  def update(assigns, socket) do
+    socket =
+      socket
+      |> assign(assigns)
+
+    {:ok, socket}
   end
 
   defp token_link(invitation) do
@@ -167,7 +194,7 @@ defmodule Usher.Web.Pages.InvitationsListPage do
   end
 
   defp expires_at(%{expires_at: expires_at}) when is_struct(expires_at, DateTime) do
-    DateTimeHelpers.time_left_until(expires_at)
+    time_left_until(expires_at)
   end
 
   defp expires_at(_), do: "Never"
@@ -197,7 +224,6 @@ defmodule Usher.Web.Pages.InvitationsListPage do
         action: :registered
       )
 
-    # Add joined_count as a virtual field for backward compatibility
     Map.put(invitation, :joined_count, length(unique_registrations))
   end
 end

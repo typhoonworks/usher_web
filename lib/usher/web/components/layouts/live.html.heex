@@ -1,7 +1,7 @@
 <meta name="live-transport" content={@live_transport} />
 <meta name="live-path" content={@live_path} />
 
-<div class="flex flex-col min-h-screen sm:h-screen sm:overflow-hidden bg-red-50 dark:bg-gray-900">
+<div class="flex flex-col min-h-screen sm:h-screen sm:overflow-hidden bg-blue-50 dark:bg-gray-900">
   <div id="platform-scout" phx-hook="PlatformScout" style="display: none;"></div>
   <nav class="border-b border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800">
     <div class="mx-auto px-4 sm:px-6 lg:px-8">
@@ -12,19 +12,19 @@
           </div>
         </div>
         <div class="flex items-center space-x-2 sm:space-x-4">
-          <%!-- <.link navigate={lotus_path([:queries, "new"])} class="flex items-center h-full">
-            <.button type="button" class="text-sm sm:text-base">New Query</.button>
-          </.link> --%>
+          <.link navigate={usher_path([:new])} class="flex items-center h-full">
+            <.button type="button" class="text-sm sm:text-base">New Invitation</.button>
+          </.link>
           <.theme_selector />
         </div>
       </div>
     </div>
   </nav>
 
-  <main class="flex-1 min-h-0">
+  <main class="flex-1 min-h-0 overflow-y-auto">
     <.flash flash={@flash} kind={:info} />
     <.flash flash={@flash} kind={:error} />
-    <div class="h-full sm:overflow-hidden">
+    <div class="h-full">
       {@inner_content}
     </div>
   </main>
