@@ -234,6 +234,9 @@ defmodule Usher.Web.CoreComponents do
             "light" ->
               "rounded-md bg-white dark:bg-transparent px-3.5 py-2.5 text-sm font-semibold text-gray-900 dark:text-gray-100 shadow-sm ring-1 ring-inset ring-gray-300 dark:ring-gray-600 hover:bg-gray-50 dark:hover:bg-white/10"
 
+            "danger" ->
+              "phx-submit-loading:opacity-75 rounded-lg bg-red-600 hover:bg-red-700 py-2 px-3 text-sm font-semibold leading-6 text-white active:text-white/80"
+
             _ ->
               "phx-submit-loading:opacity-75 rounded-md bg-blue-600 px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-blue-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600"
           end

@@ -142,25 +142,7 @@ defmodule Usher.Web.Live.InvitationsList do
   end
 
   @impl Phoenix.LiveView
-  def mount(params, session, socket) do
-    %{
-      "prefix" => prefix,
-      "live_path" => live_path,
-      "live_transport" => live_transport,
-      "csp_nonces" => csp_nonces,
-      "resolver" => resolver
-    } = session
-
-    Process.put(:routing, {socket, prefix})
-
-    socket =
-      socket
-      |> assign(params: params)
-      |> assign(live_path: live_path, live_transport: live_transport)
-      |> assign(:page_title, "Usher Dashboard")
-      |> assign(:csp_nonces, csp_nonces)
-      |> assign(:resolver, resolver)
-
+  def mount(_params, _session, socket) do
     invitations =
       Usher.list_invitations()
       |> Enum.map(&add_usage_count/1)
@@ -200,10 +182,45 @@ defmodule Usher.Web.Live.InvitationsList do
   end
 
   @impl Phoenix.LiveView
+  def handle_event("delete_invitation", %{"id" => id}, socket) do
+    invitation = Usher.get_invitation!(id)
+
+    {:noreply, assign(socket, :delete_confirmation, invitation)}
+  end
+
+  @impl Phoenix.LiveView
+  def handle_event("confirm_delete_invitation", %{"id" => id}, socket) do
+    invitation = Usher.get_invitation!(id)
+    {:ok, _} = Usher.delete_invitation(invitation)
+
+    socket =
+      socket
+      |> stream_delete(:invitations, invitation)
+      |> assign(:delete_confirmation, nil)
+      |> put_flash(:info, "Invitation deleted successfully")
+
+    {:noreply, socket}
+  end
+
+  @impl Phoenix.LiveView
+  def handle_event("cancel_delete_invitation", _params, socket) do
+    {:noreply, assign(socket, :delete_confirmation, nil)}
+  end
+
+  @impl Phoenix.LiveView
   def handle_event("copy-to-clipboard-success", _, socket) do
     socket =
       socket
       |> put_flash(:info, "Token link copied to clipboard")
+
+    {:noreply, socket}
+  end
+
+  @impl Phoenix.LiveView
+  def handle_event("copy-to-clipboard-error", %{"error" => error}, socket) do
+    socket =
+      socket
+      |> put_flash(:error, "Failed to copy token link to clipboard: #{error}")
 
     {:noreply, socket}
   end

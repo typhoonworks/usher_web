@@ -31,6 +31,7 @@ defmodule Usher.Web.Router do
     Enum.each(opts, &validate_opt!/1)
 
     on_mount = Keyword.get(opts, :on_mount, [])
+    on_mount = [{__MODULE__, :usher_on_mount_hook} | on_mount]
 
     session_args = [
       prefix,
@@ -69,6 +70,32 @@ defmodule Usher.Web.Router do
         script: conn.assigns[csp_keys[:script]]
       }
     }
+  end
+
+  @doc """
+  Usher's own on_mount hook. Gets merged with any `on_mount` hooks provided by the user.
+
+  This on_mount hook will run before any user-defined on_mount hooks.
+  """
+  def on_mount(:usher_on_mount_hook, _params, session, socket) do
+    %{
+      "prefix" => prefix,
+      "live_path" => live_path,
+      "live_transport" => live_transport,
+      "csp_nonces" => csp_nonces,
+      "resolver" => resolver
+    } = session
+
+    Process.put(:routing, {socket, prefix})
+
+    socket =
+      socket
+      |> Phoenix.Component.assign(live_path: live_path, live_transport: live_transport)
+      |> Phoenix.Component.assign(:page_title, "Usher Dashboard")
+      |> Phoenix.Component.assign(:csp_nonces, csp_nonces)
+      |> Phoenix.Component.assign(:resolver, resolver)
+
+    {:cont, socket}
   end
 
   defp expand_csp_nonce_keys(nil), do: %{style: nil, script: nil}
