@@ -82,7 +82,7 @@ defmodule Usher.Web.Layouts do
 
     ~H"""
     <footer class={[
-      "flex flex-col px-3 pb-3 text-sm justify-center items-center md:flex-row"
+      "flex flex-col p-2 text-sm justify-center items-center md:flex-row"
     ]}>
       <.version name="Usher" version={@usher_version} />
       <.version name="Usher.Web" version={@usher_web_version} />
