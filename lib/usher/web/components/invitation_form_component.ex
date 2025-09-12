@@ -92,7 +92,7 @@ defmodule Usher.Web.Components.InvitationFormComponent do
                 :if={@action == :edit}
                 class="text-sm text-gray-900 font-mono bg-gray-100 p-2 rounded"
               >
-                {@invitation.token}
+                {@original_invitation.token}
               </p>
             </div>
           </div>
@@ -154,7 +154,9 @@ defmodule Usher.Web.Components.InvitationFormComponent do
 
     socket =
       socket
-      |> assign(assigns)
+      |> assign(:title, assigns.title)
+      |> assign(:action, assigns.action)
+      |> assign(:original_invitation, invitation)
       |> assign(:expires_on, expires_on)
       |> assign(:form, to_form(changeset))
       |> assign_new(:timezone, fn -> "Etc/UTC" end)
@@ -186,28 +188,29 @@ defmodule Usher.Web.Components.InvitationFormComponent do
     form_changeset =
       socket.assigns.form.data
       |> InvitationFormData.update_changeset(invitation_params)
+      |> Ecto.Changeset.apply_action(:validate)
 
-    case Ecto.Changeset.apply_action(form_changeset, :validate) do
-      {:ok, form_data} ->
-        invitation_attrs =
-          Map.new()
-          |> Map.put(:name, form_data.name)
-          |> Map.put_new_lazy(:expires_at, fn ->
-            convert_expires_on_to_expires_at(
-              form_data.expires_on,
-              form_data.set_expiration,
-              socket.assigns.timezone
-            )
-          end)
+    case socket.assigns.action do
+      :new ->
+        create_invitation(socket, form_changeset)
 
-        create_invitation(socket, invitation_attrs)
-
-      {:error, changeset} ->
-        {:noreply, assign(socket, form: to_form(changeset))}
+      :edit ->
+        update_invitation(socket, form_changeset)
     end
   end
 
-  defp create_invitation(socket, invitation_attrs) do
+  defp create_invitation(socket, {:ok, form_data}) do
+    invitation_attrs =
+      Map.new()
+      |> Map.put(:name, form_data.name)
+      |> Map.put_new_lazy(:expires_at, fn ->
+        convert_expires_on_to_expires_at(
+          form_data.expires_on,
+          form_data.set_expiration,
+          socket.assigns.timezone
+        )
+      end)
+
     case Usher.create_invitation(invitation_attrs) do
       {:ok, invitation} ->
         notify_parent({:saved, invitation})
@@ -228,7 +231,55 @@ defmodule Usher.Web.Components.InvitationFormComponent do
     end
   end
 
+  defp create_invitation(socket, {:error, changeset}) do
+    {:noreply, assign(socket, form: to_form(changeset))}
+  end
+
+  defp update_invitation(socket, {:ok, form_data}) do
+    original_invitation = socket.assigns.original_invitation
+
+    invitation_attrs =
+      Map.new()
+      |> Map.put(:name, form_data.name)
+      |> Map.put(:token, original_invitation.token)
+      |> Map.put_new_lazy(:expires_at, fn ->
+        convert_expires_on_to_expires_at(
+          form_data.expires_on,
+          form_data.set_expiration,
+          socket.assigns.timezone
+        )
+      end)
+
+    update_changeset = Usher.change_invitation(original_invitation, invitation_attrs)
+
+    case Usher.Config.repo().update(update_changeset) do
+      {:ok, invitation} ->
+        notify_parent({:updated, invitation})
+
+        {:noreply,
+         socket
+         |> put_flash(:info, "Invitation updated successfully")
+         |> push_patch(to: usher_path())}
+
+      {:error, %Ecto.Changeset{} = changeset} ->
+        error_message =
+          Enum.map_join(changeset.errors, ", ", fn {field, {msg, _}} -> "#{field}: #{msg}" end)
+
+        form_changeset = InvitationFormData.create_changeset(original_invitation)
+
+        {:noreply,
+         socket
+         |> put_flash(:error, "Failed to create invitation: #{error_message}")
+         |> assign(form: to_form(form_changeset))}
+    end
+  end
+
+  defp update_invitation(socket, {:error, changeset}) do
+    {:noreply, assign(socket, form: to_form(changeset))}
+  end
+
   defp convert_expires_on_to_expires_at(expires_on, set_expiration, timezone) do
+    dbg {expires_on, set_expiration, timezone}
     if set_expiration && expires_on && expires_on != "" do
       date_to_end_of_day_utc!(expires_on, timezone)
     else

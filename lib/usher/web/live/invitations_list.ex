@@ -72,7 +72,7 @@ defmodule Usher.Web.Live.InvitationsList do
           </:col>
           <:action :let={{_id, invitation}}>
             <div class="flex items-center justify-end space-x-2 pr-4">
-              <%!-- <.link patch={~p"/admin/invitations/#{invitation.id}/edit"}>
+              <.link patch={usher_path([invitation.id, :edit])}>
                 <.button
                   variant="light"
                   class="text-blue-700 bg-blue-100 hover:bg-blue-200 px-3 py-2"
@@ -80,7 +80,7 @@ defmodule Usher.Web.Live.InvitationsList do
                 >
                   <.icon name="hero-pencil" class="h-4 w-4" />
                 </.button>
-              </.link> --%>
+              </.link>
               <.button
                 variant="light"
                 class="text-red-700 bg-red-100 hover:bg-red-200 px-3 py-2"
@@ -170,6 +170,13 @@ defmodule Usher.Web.Live.InvitationsList do
     |> assign(:invitation, %Invitation{})
   end
 
+  defp apply_action(socket, :edit, %{"id" => id}) do
+    invitation = Usher.get_invitation!(id)
+
+    socket
+    |> assign(:invitation, invitation)
+  end
+
   @impl Phoenix.LiveView
   def handle_info({InvitationFormComponent, {:saved, %Invitation{} = new_invitation}}, socket) do
     new_invitation = add_usage_count(new_invitation)
@@ -177,6 +184,20 @@ defmodule Usher.Web.Live.InvitationsList do
     socket =
       socket
       |> stream_insert(:invitations, new_invitation, at: 0)
+
+    {:noreply, socket}
+  end
+
+  @impl Phoenix.LiveView
+  def handle_info(
+        {InvitationFormComponent, {:updated, %Invitation{} = updated_invitation}},
+        socket
+      ) do
+    updated_invitation = add_usage_count(updated_invitation)
+
+    socket =
+      socket
+      |> stream_insert(:invitations, updated_invitation, update_only: true)
 
     {:noreply, socket}
   end

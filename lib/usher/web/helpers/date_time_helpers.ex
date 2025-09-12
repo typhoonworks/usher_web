@@ -87,5 +87,9 @@ defmodule Usher.Web.Helpers.DateTimeHelpers do
     end
   end
 
+  def date_to_end_of_day_utc!(%Date{} = date, timezone) do
+    DateTime.new!(date, @end_of_day_time, timezone)
+  end
+
   def date_to_end_of_day_utc!(_, _), do: nil
 end

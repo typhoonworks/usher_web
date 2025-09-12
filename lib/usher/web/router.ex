@@ -20,6 +20,7 @@ defmodule Usher.Web.Router do
         live_session session_name, session_opts do
           live "/", Usher.Web.Live.InvitationsList, :index, route_opts
           live "/new", Usher.Web.Live.InvitationsList, :new, route_opts
+          live "/:id/edit", Usher.Web.Live.InvitationsList, :edit, route_opts
         end
       end
     end
