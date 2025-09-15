@@ -105,6 +105,7 @@ defmodule Usher.Web.MixProject do
     [
       main: "overview",
       authors: ["Arda Tugay"],
+      logo: "assets/logo.svg",
       api_reference: false,
       source_ref: "v#{@version}",
       source_url: @source_url,
