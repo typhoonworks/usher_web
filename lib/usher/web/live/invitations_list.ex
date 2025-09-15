@@ -139,8 +139,8 @@ defmodule Usher.Web.Live.InvitationsList do
         on_cancel={JS.push("cancel_delete_invitation")}
       >
         <div class="space-y-4">
-          <h3 class="text-lg font-medium text-zinc-900">Confirm Deletion</h3>
-          <p class="text-zinc-700">
+          <h3 class="text-lg font-medium text-zinc-900 dark:text-zinc-200">Confirm Deletion</h3>
+          <p class="text-zinc-700 dark:text-zinc-300">
             Are you sure you want to delete this invitation?
             This action cannot be undone and will invalidate the invitation link.
           </p>

@@ -80,7 +80,7 @@ defmodule Usher.Web.Components.InvitationFormComponent do
         phx-hook="GetUserTimezone"
       >
         <div class="space-y-4">
-          <h2 class="text-lg font-semibold leading-6 text-zinc-900">
+          <h2 class="text-lg font-semibold leading-6 text-zinc-900 dark:text-zinc-200">
             {@title}
           </h2>
 
@@ -97,13 +97,13 @@ defmodule Usher.Web.Components.InvitationFormComponent do
           <div>
             <%!-- <input type="hidden" name={f[:token].name} value={f[:token].value} /> --%>
             <div class="space-y-1">
-              <label class="block text-sm font-bold text-gray-700">Token</label>
-              <p :if={@action == :new} class="text-sm text-gray-500">
+              <label class="block text-sm font-bold text-gray-700 dark:text-zinc-300">Token</label>
+              <p :if={@action == :new} class="text-sm text-gray-500 dark:text-zinc-400">
                 A unique token will be automatically generated for this invitation
               </p>
               <p
                 :if={@action == :edit}
-                class="text-sm text-gray-900 font-mono bg-gray-100 p-2 rounded"
+                class="text-sm text-gray-900 dark:text-zinc-100 font-mono bg-gray-100 dark:bg-zinc-800 p-2 rounded"
               >
                 {@original_invitation.token}
               </p>
@@ -115,9 +115,9 @@ defmodule Usher.Web.Components.InvitationFormComponent do
               <.input
                 type="checkbox"
                 field={f[:set_expiration]}
-                class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+                class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 dark:border-zinc-700 rounded bg-white dark:bg-zinc-800"
               />
-              <label for="set-expiration" class="ml-2 block text-sm text-gray-900">
+              <label for="set-expiration" class="ml-2 block text-sm text-gray-900 dark:text-zinc-200">
                 Set expiration date
               </label>
             </div>
@@ -133,7 +133,7 @@ defmodule Usher.Web.Components.InvitationFormComponent do
                 min={current_date(@timezone)}
                 phx-target={@myself}
               />
-              <p class="mt-1 text-sm text-gray-500">
+              <p class="mt-1 text-sm text-gray-500 dark:text-zinc-400">
                 Invitation will expire at the end of this day
               </p>
             </div>
