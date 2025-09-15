@@ -84,7 +84,8 @@ jobs:
 
       - run: mix compile --warnings-as-errors
 
-      - name: Run tests
-        run: mix test
+      - run: mix test.setup
+
+      - run: mix test
 
       # - run: mix dialyzer
