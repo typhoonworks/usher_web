@@ -31,3 +31,17 @@ Usher Web is a web interface for the [Usher invitation link management library](
 ## Getting Started
 
 Take a look at the [overview guide](https://hexdocs.pm/usher_web/overview.html) for a quick introduction to Usher Web.
+
+## Contributing
+
+Please see the [contribution guide](CONTRIBUTING.md).
+
+## Acknowledgements
+
+Usher Web has been heavily inspired by [Oban Web](https://github.com/oban-bg/oban_web) and follows a similar setup for both development and deployment of LiveView routes ❤️.
+
+## License
+
+Usher Web is licensed under the [MIT License](LICENSE).
+
+Portions of the code are adapted from [Oban Web](https://github.com/oban-bg/oban_web), which is licensed under the [Apache License 2.0](licenses/oban_web_apache_2_0_license).
