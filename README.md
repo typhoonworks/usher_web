@@ -14,6 +14,12 @@
 
 Usher Web is a web interface for the [Usher invitation link management library](https://github.com/typhoonworks/usher).
 
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/typhoonworks/usher_web/refs/heads/main/guides/images/main_view_dark.png" />
+  <source media="(prefers-color-scheme: light)" srcset="https://raw.githubusercontent.com/typhoonworks/usher_web/refs/heads/main/guides/images/main_view_light.png" />
+  <img src="https://raw.githubusercontent.com/typhoonworks/usher_web/refs/heads/main/guides/images/main_view_dark.png" />
+</picture>
+
 ## Current Features
 
 - List, copy, edit, and delete invitation links.
