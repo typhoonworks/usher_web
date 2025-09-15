@@ -1,0 +1,92 @@
+name: ci
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+env:
+  CACHE_VERSION: v1
+  PERSISTENT_CACHE_DIR: cached
+
+jobs:
+  ci:
+    runs-on: ubuntu-latest
+
+    strategy:
+      fail-fast: false
+      matrix:
+        tuple:
+          # Elixir 1.14 with LiveView variants
+          - elixir: "1.14"
+            erlang: "25.3.2"
+            postgres: "15.8-alpine"
+            liveview: "1.0.18"
+          - elixir: "1.14"
+            erlang: "25.3.2"
+            postgres: "15.8-alpine"
+            liveview: "1.1.11"
+
+          # Elixir 1.18 with LiveView variants
+          - elixir: "1.18"
+            erlang: "27.3.2"
+            postgres: "15.8-alpine"
+            liveview: "1.0.18"
+          - elixir: "1.18"
+            erlang: "27.3.2"
+            postgres: "15.8-alpine"
+            liveview: "1.1.11"
+
+    env:
+      MIX_ENV: test
+      USHER_WEB_PHX_LIVE_VIEW_VERSION: == ${{ matrix.tuple.liveview }}
+
+    services:
+      postgres:
+        image: postgres:${{ matrix.tuple.postgres }}
+        ports:
+          - 2345:5432
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: erlef/setup-beam@v1
+        with:
+          elixir-version: ${{ matrix.tuple.elixir }}
+          otp-version: ${{ matrix.tuple.erlang }}
+
+      - uses: actions/cache@v4
+        with:
+          path: |
+            deps
+            _build
+          key: ${{ matrix.tuple.elixir }}-${{ matrix.tuple.erlang }}-lv:${{ matrix.tuple.liveview }}-${{ hashFiles('**/mix.lock') }}
+          restore-keys: |
+            ${{ matrix.tuple.elixir }}-${{ matrix.tuple.erlang }}-lv:${{ matrix.tuple.liveview }}-
+            ${{ matrix.tuple.elixir }}-${{ matrix.tuple.erlang }}-
+
+      - run: mix deps.get --only $MIX_ENV
+
+      - name: Seed assets
+        run: mkdir -p priv/static && touch priv/static/app.css && touch priv/static/app.js
+
+      - run: mix format --check-formatted
+
+      - run: mix deps.compile
+
+      - run: mix compile --warnings-as-errors
+
+      - name: Run tests
+        run: |
+          mix do ecto.create, ecto.migrate
+          mix test
+
+      # - run: mix dialyzer

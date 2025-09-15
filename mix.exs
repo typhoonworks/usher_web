@@ -40,9 +40,9 @@ defmodule Usher.Web.MixProject do
 
       # Phoenix
       {:jason, "~> 1.2"},
-      {:phoenix, "~> 1.7.21"},
+      {:phoenix, "~> 1.7.0"},
       {:phoenix_html, "~> 4.1"},
-      {:phoenix_live_view, "~> 1.0"},
+      {:phoenix_live_view, live_view_requirement()},
       {:phoenix_live_dashboard, "~> 0.8.3"},
       {:phoenix_ecto, "~> 4.6"},
 
@@ -70,6 +70,16 @@ defmodule Usher.Web.MixProject do
       {:tailwind, "~> 0.3.0", runtime: Mix.env() == :dev},
       {:tidewave, "~> 0.5", only: :dev}
     ]
+  end
+
+  # Allows overriding the Phoenix LiveView version at build time via env var.
+  # If USHER_WEB_PHX_LIVE_VIEW_VERSION is not set, defaults to "~> 1.0".
+
+  defp live_view_requirement do
+    case System.get_env("USHER_WEB_PHX_LIVE_VIEW_VERSION") do
+      nil -> "~> 1.0"
+      v -> v
+    end
   end
 
   # Aliases are shortcuts or tasks specific to the current project.
