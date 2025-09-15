@@ -1,7 +1,5 @@
 defmodule Usher.Web.Helpers.DateTimeHelpers do
-  @moduledoc """
-  Contains helper functions for date and time manipulation and formatting.
-  """
+  @moduledoc false
 
   @minute 60
   @hour @minute * 60

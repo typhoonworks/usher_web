@@ -1,4 +1,6 @@
 defmodule Usher.Web.Live.InvitationsList do
+  @moduledoc false
+
   use Usher.Web, :live_view
 
   alias Usher.Invitation

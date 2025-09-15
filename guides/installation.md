@@ -3,6 +3,7 @@
 ## Requirements
 
 Usher requires:
+
 - Elixir 1.14 or later
 - OTP 25 or later
 - PostgreSQL

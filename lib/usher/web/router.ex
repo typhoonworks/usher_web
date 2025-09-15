@@ -1,5 +1,120 @@
 defmodule Usher.Web.Router do
-  @moduledoc false
+  @moduledoc """
+  Mount the Usher Dashboard into a Phoenix router.
+
+  This module provides the `usher_dashboard/2` macro, which mounts Usher's
+  LiveView-powered dashboard and wires it to your application's LiveView socket.
+
+  ## Usage
+
+  Import `Usher.Web.Router` in your Phoenix router and call `usher_dashboard/2`
+  within a scope that uses your browser pipeline:
+
+      defmodule MyAppWeb.Router do
+        use MyAppWeb, :router
+
+        import Usher.Web.Router
+
+        pipeline :browser do
+          plug :accepts, ["html"]
+          plug :fetch_session
+          plug :fetch_live_flash
+          plug :put_root_layout, {MyAppWeb.Layouts, :root}
+          plug :protect_from_forgery
+          plug :put_secure_browser_headers
+          # ...your auth plug(s) that assign the current user...
+        end
+
+        scope "/" do
+          pipe_through :browser
+
+          # Mount at "/usher" with default options
+          usher_dashboard "/usher"
+        end
+      end
+
+  By default, this mounts three routes under the given path:
+
+  - `GET /usher` — Dashboard index
+  - `GET /usher/new` — New item view
+  - `GET /usher/:id/edit` — Edit item view
+
+  The exact UI and behavior are provided by Usher's LiveViews and may evolve,
+  but the route structure remains stable for helpers and links.
+
+  ## Important
+
+  Usher does not implement authentication on its own. Until you configure an
+  authentication pipeline and a custom resolver (`resolver:` option), the
+  default `Usher.Web.Resolver` allows access for everyone (`:all`). Protect your
+  Usher routes behind your browser/auth pipelines and provide a resolver to
+  restrict access appropriately. See `Usher.Web.Authentication` and
+  `Usher.Web.Resolver` for details.
+
+  ## Options
+
+  - `:as` — Prefix used for route helpers and the LiveView session name.
+    Defaults to `:usher_dashboard`. For example, with the default you can
+    generate paths with `~p"/usher"` or via helpers such as
+    `Routes.usher_dashboard_path(conn, :index)` depending on your Phoenix
+    version and setup.
+
+  - `:socket_path` — Path to your LiveView socket. Defaults to `"/live"`.
+    Change this if your application configured a custom LiveView socket path.
+
+  - `:transport` — LiveView transport, either `:websocket` (default) or
+    `:longpoll`. Match this to your LiveView configuration.
+
+  - `:csp_nonce_assign_key` — Configure how CSP nonces are read from
+    `conn.assigns` and injected into the LiveView session. Accepts:
+      * `nil` (default): no CSP nonces are propagated
+      * an atom: the same assign key is used for both script and style nonces
+      * a map: `%{script: :script_key, style: :style_key}` for independent keys
+
+    For Phoenix apps that place a single nonce under `:csp_nonce`, you can pass
+    `csp_nonce_assign_key: :csp_nonce`. If you maintain separate keys, pass
+    a map such as `csp_nonce_assign_key: %{script: :csp_script_nonce, style: :csp_style_nonce}`.
+
+  - `:resolver` — A module that implements the `Usher.Web.Resolver` behaviour
+    used to determine the current user and their access level. Defaults to
+    `Usher.Web.Resolver`, which allows all access. See `Usher.Web.Authentication`
+    for end-to-end authentication and access control details.
+
+  - `:on_mount` — A list of additional `on_mount` hooks to run for all Usher
+    LiveViews. Usher always prepends `Usher.Web.Authentication` and
+    `Usher.Web.LiveMount`; any hooks you provide are invoked afterwards.
+
+  ## Authentication & access control
+
+  Usher's dashboard authentication flow is implemented by the
+  `Usher.Web.Authentication` on-mount hook together with a configurable
+  `Usher.Web.Resolver`. The resolver extracts a user and determines an access
+  level; the hook applies enforcement (including redirects for forbidden
+  access). See `Usher.Web.Authentication` for the complete walkthrough and a
+  resolver example.
+
+  ## CSP Nonces
+
+  If your application enforces a strict CSP and uses per-request nonces, set
+  `:csp_nonce_assign_key` so Usher's LiveViews receive and apply the nonces to
+  inline scripts and styles as needed. Usher reads the nonces from
+  `conn.assigns` using the keys you provide and makes them available as
+  `@csp_nonces.script` and `@csp_nonces.style` assigns during mount.
+
+  ## Session Data
+
+  Usher stores a small set of values in the LiveView session for each request,
+  all of which are internal implementation details. They are documented here to
+  aid integration and debugging:
+
+  - `"prefix"` — the mounted path prefix (scope-aware)
+  - `"live_path"` — the LiveView socket path (e.g., `"/live"`)
+  - `"live_transport"` — the chosen LiveView transport
+  - `"resolver"` — the resolver module used for auth/access
+  - `"user"` — the resolved user value
+  - `"access"` — the access level derived by the resolver
+  - `"csp_nonces"` — a map with `:script` and `:style` nonce values (when set)
+  """
 
   import Phoenix.Component, only: [assign: 2, assign: 3]
 
@@ -12,6 +127,11 @@ defmodule Usher.Web.Router do
 
   @allowed_transport_values ~w(longpoll websocket)a
 
+  @doc """
+  Mount the Usher Dashboard at the given `path` within a Phoenix router.
+
+  See the module documentation for a complete list of options and usage notes.
+  """
   defmacro usher_dashboard(path, opts \\ []) do
     quote bind_quoted: binding() do
       prefix = Phoenix.Router.scoped_path(__MODULE__, path)

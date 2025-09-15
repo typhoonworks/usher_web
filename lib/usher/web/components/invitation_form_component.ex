@@ -1,9 +1,22 @@
 defmodule Usher.Web.Components.InvitationFormComponent do
+  @moduledoc false
+
   use Usher.Web, :live_component
 
   alias Usher.Invitation
 
   defmodule InvitationFormData do
+    @moduledoc """
+    Embedded schema and changeset functions for the invitation form.
+
+    Reasons why we're not directly using an `Usher.Invitation` changeset:
+    1. We need to convert between `expires_at` (a `DateTime`) and `expires_on` (a `Date`)
+       for user-friendly date input.
+    2. We want to handle the optional expiration date with a checkbox, which doesn't map
+       directly to the `Invitation` schema. While we could user a `:virtual` field for this,
+       Usher Web can't modify the original schema.
+    """
+
     use Ecto.Schema
 
     import Ecto.Changeset

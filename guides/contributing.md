@@ -14,21 +14,24 @@ Thank you for your interest in contributing to Usher Web! This guide will help y
 ### Getting Started
 
 1. **Fork and clone the repository**:
+
    ```bash
    git clone https://github.com/typhoonworks/usher_web.git
    cd usher_web
    ```
 
 2. **Install dependencies**:
+
    ```bash
    mix deps.get
    ```
 
 3. **Set up the database**:
+
    ```bash
    # Using Docker (recommended)
    docker-compose up -d
-   
+
    # Or start PostgreSQL manually on port 2345
    # Then create and migrate the test database
    mix test.setup
@@ -42,17 +45,20 @@ Thank you for your interest in contributing to Usher Web! This guide will help y
 ## Development Commands
 
 ### Testing
+
 - `mix test` - Run all tests
 - `mix test.setup` - Set up test database (drops, creates, migrates)
 - `docker-compose up -d` - Start PostgreSQL for testing
 - `mix dev` - Starts a development server that deploys the LiveView UI for Usher Web
 
 ### Code Quality
+
 - `mix lint` - Run formatter and dialyzer
 - `mix format` - Format code according to project standards
 - `mix dialyzer` - Run static analysis
 
 ### Documentation
+
 - `mix docs` - Generate documentation locally
 - `mix hex.publish` - Publish to Hex.pm (maintainers only)
 
@@ -94,6 +100,7 @@ git checkout -b feature/amazing-feature
 ```
 
 Use descriptive branch names:
+
 - `feature/add-bulk-invitations`
 - `fix/token-validation-bug`
 
@@ -127,6 +134,7 @@ git push origin feature/amazing-feature
 ```
 
 Then create a pull request on GitHub with:
+
 - Clear description of changes
 - Reference to any related issues
 
@@ -136,24 +144,29 @@ Then create a pull request on GitHub with:
 
 ```markdown
 ## Summary
+
 Brief description of what this PR does.
 
 ## Changes
+
 - List of specific changes made
 - Any breaking changes
 - New features added
 
 ## Testing
+
 - [ ] All existing tests pass
 - [ ] New tests added for new functionality
 - [ ] Manual testing completed
 
 ## Documentation
+
 - [ ] Updated relevant documentation
 - [ ] Added docstrings for new public functions
 - [ ] Updated CHANGELOG.md if applicable
 
 ## Checklist
+
 - [ ] Code follows project style guidelines
 - [ ] Self-review completed
 - [ ] Tests added and passing
@@ -230,3 +243,9 @@ For maintainers only:
 Please be respectful and constructive in all interactions. We want Usher Web to be a welcoming project for contributors of all backgrounds and experience levels.
 
 Thank you for contributing to Usher Web! 🎉
+
+## See also
+
+- Router (mounting macro): [lib/usher/web/router.ex](../lib/usher/web/router.ex)
+- Authentication (on_mount hook): [lib/usher/web/authentication.ex](../lib/usher/web/authentication.ex)
+- Resolver (behaviour and defaults): [lib/usher/web/resolver.ex](../lib/usher/web/resolver.ex)

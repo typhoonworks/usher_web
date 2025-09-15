@@ -52,3 +52,7 @@ end
 ```
 
 Now you can go to the `/usher` path in your application to access the Usher Web interface.
+
+## Authentication and Authorization
+
+For handling auth for Usher Web, you need to implement a custom resolver module by creating a module that uses the `Usher.Web.Resolver` behaviour and implements its callbacks. See module docs for `Usher.Web.Authentication` and `Usher.Web.Resolver` for details.

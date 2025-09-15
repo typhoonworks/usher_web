@@ -1,6 +1,65 @@
 defmodule Usher.Web.Resolver do
   @moduledoc """
-  Behavior for customizing Usher Web dashboard access and functionality.
+  Behaviour module for resolving users and access levels for the Usher Dashboard.
+
+  A resolver is responsible for two things:
+
+  - Extracting the current user from a `Plug.Conn` when the dashboard mounts
+  - Mapping that user to an access level for the dashboard
+
+  Usher invokes your resolver from the router to populate the LiveView session.
+  Enforcement happens in `Usher.Web.Authentication`, which reads the session and
+  halts/redirects when access is forbidden. See `Usher.Web.Router` for mounting
+  and configuration, and `Usher.Web.Authentication` for the on-mount hook.
+
+  ## Callbacks
+
+  - `c:resolve_user/1` — Given a `Plug.Conn`, return a user value (map/struct) or
+    `nil`. This value is passed to `c:resolve_access/1`.
+  - `c:resolve_access/1` — Given the user value, return one of the supported
+    access levels:
+
+    - `:all` — Full access
+    - `:read_only` — View-only access, with mutations disabled
+    - `:forbidden` — No access; authentication will redirect to `/`
+    - `{:forbidden, path}` — No access; redirect to the given path
+
+  Both callbacks are optional. If a callback isn’t implemented, Usher falls
+  back to the defaults defined in this module: `resolve_user/1` returns `nil`
+  and `resolve_access/1` returns `:all`.
+
+  ## Security note
+
+  You are expected to implement these callbacks to enforce your application's
+  authentication and authorization policies. If you don't, the defaults mean
+  anyone can access the Usher UI (no authentication, full access). Pair this
+  with a proper authentication pipeline and pass your resolver via the router
+  option `resolver:`.
+
+  ## Example
+
+      defmodule MyAppWeb.UsherResolver do
+        @behaviour Usher.Web.Resolver
+
+        # Pull the current user from assigns (your auth plug should set this)
+        def resolve_user(conn), do: conn.assigns[:current_user]
+
+        # Map user roles to access levels
+        def resolve_access(%{role: :admin}), do: :all
+        def resolve_access(%{role: :viewer}), do: :read_only
+        def resolve_access(_), do: :forbidden
+      end
+
+  Then configure the dashboard to use your resolver in your Phoenix router:
+
+      import Usher.Web.Router
+      scope "/" do
+        pipe_through :browser
+        usher_dashboard "/usher", resolver: MyAppWeb.UsherResolver
+      end
+
+  See `Usher.Web.Authentication` for how the access level is enforced during
+  LiveView mount.
   """
 
   @type user :: nil | map() | struct()

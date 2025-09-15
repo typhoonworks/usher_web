@@ -1,15 +1,19 @@
 defmodule Usher.Web.MixProject do
   use Mix.Project
 
+  @version "0.1.0"
+  @source_url "https://github.com/typhoonworks/usher_web"
+
   def project do
     [
       app: :usher_web,
-      version: "0.1.0",
+      version: @version,
       elixir: "~> 1.14",
       elixirc_paths: elixirc_paths(Mix.env()),
       start_permanent: Mix.env() == :prod,
       aliases: aliases(),
-      deps: deps()
+      deps: deps(),
+      docs: docs()
     ]
   end
 
@@ -57,6 +61,7 @@ defmodule Usher.Web.MixProject do
       # Development
       {:bandit, "~> 1.5"},
       {:esbuild, "~> 0.10", runtime: Mix.env() == :dev},
+      {:ex_doc, "~> 0.34", only: :dev, runtime: false, warn_if_outdated: true},
       {:finch, "~> 0.13"},
       {:heroicons,
        github: "tailwindlabs/heroicons",
@@ -95,6 +100,40 @@ defmodule Usher.Web.MixProject do
         "ecto.create",
         "ecto.migrate --migrations-path test/support/migrations"
       ]
+    ]
+  end
+
+  defp docs do
+    [
+      main: "readme",
+      authors: ["Arda Tugay"],
+      api_reference: false,
+      source_ref: "v#{@version}",
+      source_url: @source_url,
+      extra_section: "GUIDES",
+      extras: docs_guides(),
+      groups_for_modules: [
+        Authentication: [
+          Usher.Web.Authentication,
+          Usher.Web.Resolver
+        ],
+        Router: [
+          Usher.Web.Router
+        ],
+        LiveViews: [
+          Usher.Web.Components.InvitationFormComponent.InvitationFormData
+        ]
+      ]
+    ]
+  end
+
+  defp docs_guides do
+    [
+      "README.md",
+      "guides/overview.md",
+      "guides/installation.md",
+      "guides/getting-started.md",
+      "guides/contributing.md"
     ]
   end
 end
