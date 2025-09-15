@@ -21,25 +21,14 @@ jobs:
           - elixir: "1.14"
             erlang: "25.3.2"
             postgres: "15.8-alpine"
-            liveview: "1.0.18"
-          - elixir: "1.14"
-            erlang: "25.3.2"
-            postgres: "15.8-alpine"
-            liveview: "1.1.11"
 
           # Elixir 1.18 with LiveView variants
           - elixir: "1.18"
             erlang: "27.3.2"
             postgres: "15.8-alpine"
-            liveview: "1.0.18"
-          - elixir: "1.18"
-            erlang: "27.3.2"
-            postgres: "15.8-alpine"
-            liveview: "1.1.11"
 
     env:
       MIX_ENV: test
-      USHER_WEB_PHX_LIVE_VIEW_VERSION: == ${{ matrix.tuple.liveview }}
 
     services:
       postgres:
@@ -68,9 +57,8 @@ jobs:
           path: |
             deps
             _build
-          key: ${{ matrix.tuple.elixir }}-${{ matrix.tuple.erlang }}-lv:${{ matrix.tuple.liveview }}-${{ hashFiles('**/mix.lock') }}
+          key: ${{ matrix.tuple.elixir }}-${{ matrix.tuple.erlang }}-${{ hashFiles('**/mix.lock') }}
           restore-keys: |
-            ${{ matrix.tuple.elixir }}-${{ matrix.tuple.erlang }}-lv:${{ matrix.tuple.liveview }}-
             ${{ matrix.tuple.elixir }}-${{ matrix.tuple.erlang }}-
 
       - run: mix deps.get --only $MIX_ENV
