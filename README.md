@@ -1,24 +1,33 @@
-# UsherWeb
+# Usher Web
 
-To start your Phoenix server:
+<p>
+  <a href="https://hex.pm/packages/usher_web">
+    <img alt="Hex Version" src="https://img.shields.io/hexpm/v/usher_web.svg">
+  </a>
+  <a href="https://hexdocs.pm/usher_web">
+    <img src="https://img.shields.io/badge/docs-hexdocs-blue" alt="HexDocs">
+  </a>
+  <a href="https://github.com/typhoonworks/usher_web/actions">
+    <img alt="CI Status" src="https://github.com/typhoonworks/usher_web/workflows/ci/badge.svg">
+  </a>
+</p>
 
-  * Run `mix setup` to install and setup dependencies
-  * Start Phoenix endpoint with `mix phx.server` or inside IEx with `iex -S mix phx.server`
+Usher Web is a web interface for the [Usher invitation link management library](https://github.com/typhoonworks/usher).
 
-Now you can visit [`localhost:4000`](http://localhost:4000) from your browser.
+## Current Features
 
-Ready to run in production? Please [check our deployment guides](https://hexdocs.pm/phoenix/deployment.html).
+- List, copy, edit, and delete invitation links.
+- Create invitation links with custom names and expiration dates (including perpetual links).
 
-## Learn more
+## What's planned?
 
-  * Official website: https://www.phoenixframework.org/
-  * Guides: https://hexdocs.pm/phoenix/overview.html
-  * Docs: https://hexdocs.pm/phoenix
-  * Forum: https://elixirforum.com/c/phoenix-forum
-  * Source: https://github.com/phoenixframework/phoenix
+- Usher provides additional features that are not yet supported in Usher Web:
+  - [ ] Custom attributes per token
+  - [ ] Signed tokens
+  - [ ] Custom tokens (i.e. you can provide your own token slug)
+  - [ ] Usage tracking
+- [ ] View usage statistics for each invitation link. If you need this right now, you can query usage statistics directly from the database using [Lotus Web](https://github.com/typhoonworks/lotus_web).
 
-# Contributing
+## Getting Started
 
-Run `mix dev.setup` to generate a fake `priv/static` directory for development (watch builds will populate this directory).
-
-Then run `mix dev` to start the development server.
+Take a look at the [overview guide](https://hexdocs.pm/usher_web/overview.html) for a quick introduction to Usher Web.
