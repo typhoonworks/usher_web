@@ -22,7 +22,7 @@ config :esbuild,
         js/app.js
         --bundle
         --target=es2017
-        --outdir=../priv/static/
+        --outdir=priv/static/
       ),
     cd: Path.expand("../assets", __DIR__),
     env: %{"NODE_PATH" => Path.expand("../deps", __DIR__)}

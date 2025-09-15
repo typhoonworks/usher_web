@@ -85,11 +85,9 @@ defmodule Usher.Web.MixProject do
   # See the documentation for `Mix` for more info on aliases.
   defp aliases do
     [
-      setup: ["deps.get", "assets.setup", "assets.build"],
       "dev.setup": ["cmd ./scripts/dev_setup.sh"],
       dev: "run --no-halt dev.exs",
       "assets.setup": ["tailwind.install --if-missing", "esbuild.install --if-missing"],
-      "assets.build": ["tailwind usher_web", "esbuild usher_web"],
       "assets.deploy": [
         "tailwind usher_web --minify",
         "esbuild usher_web --minify",
