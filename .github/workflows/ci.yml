@@ -68,6 +68,8 @@ jobs:
 
       - run: mix format --check-formatted
 
+      - run: npm install --prefix assets
+
       - run: mix deps.compile
 
       - run: mix compile --warnings-as-errors

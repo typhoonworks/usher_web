@@ -98,7 +98,7 @@ defmodule Usher.Web.MixProject do
         "ecto.create",
         "ecto.migrate --migrations-path test/support/migrations"
       ],
-      lint: ["format", "dialyzer"]
+      lint: ["format", "dialyzer", "credo --strict"]
     ]
   end
 
