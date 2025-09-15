@@ -26,6 +26,10 @@ Thank you for your interest in contributing to Usher Web! This guide will help y
    mix deps.get
    ```
 
+   ```bash
+   npm install --prefix assets
+   ```
+
 3. **Set up the database**:
 
    ```bash
@@ -41,6 +45,10 @@ Thank you for your interest in contributing to Usher Web! This guide will help y
    ```bash
    mix test
    ```
+
+### A note on Heroicons
+
+Usher Web uses [Heroicons](https://heroicons.com/) for its icons. We include Heroicons as a sparse Git submodule as there's no Elixir nor `npm` package that we can install.
 
 ## Development Commands
 

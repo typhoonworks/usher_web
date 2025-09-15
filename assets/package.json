@@ -1,0 +1,8 @@
+{
+  "name": "usher_web_assets",
+  "private": true,
+  "version": "0.0.0",
+  "scripts": {
+    "postinstall": "bash ../scripts/init_heroicons_submodule.sh"
+  }
+}
