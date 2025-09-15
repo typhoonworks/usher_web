@@ -1,8 +1,9 @@
 defmodule Usher.Web.Helpers.PathHelpersTest do
   use Usher.Web.ConnCase, async: true
 
-  alias Usher.Web.Helpers.PathHelpers
   alias Phoenix.LiveViewTest
+
+  alias Usher.Web.Helpers.PathHelpers
 
   defmodule SocketProbeLive do
     @moduledoc """

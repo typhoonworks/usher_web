@@ -13,7 +13,8 @@ defmodule Usher.Web.MixProject do
       start_permanent: Mix.env() == :prod,
       aliases: aliases(),
       deps: deps(),
-      docs: docs()
+      docs: docs(),
+      dialyzer: dialyzer()
     ]
   end
 
@@ -53,13 +54,15 @@ defmodule Usher.Web.MixProject do
       # Usher
       {:usher, "~> 0.5.1"},
 
-      # Tests
+      # Tests Only
       {:floki, ">= 0.30.0", only: :test},
       {:lazy_html, ">= 0.1.0", only: :test},
       {:mimic, "~> 2.1", only: :test},
 
       # Development
       {:bandit, "~> 1.5"},
+      {:credo, "~> 1.7", only: [:dev, :test], runtime: false},
+      {:dialyxir, "~> 1.4", only: [:dev, :test], runtime: false},
       {:esbuild, "~> 0.10", runtime: Mix.env() == :dev},
       {:ex_doc, "~> 0.34", only: :dev, runtime: false, warn_if_outdated: true},
       {:finch, "~> 0.13"},
@@ -97,7 +100,8 @@ defmodule Usher.Web.MixProject do
         "ecto.drop --quiet",
         "ecto.create",
         "ecto.migrate --migrations-path test/support/migrations"
-      ]
+      ],
+      lint: ["format", "dialyzer"]
     ]
   end
 
@@ -132,6 +136,22 @@ defmodule Usher.Web.MixProject do
       "guides/installation.md",
       "guides/getting-started.md",
       "guides/contributing.md"
+    ]
+  end
+
+  defp dialyzer do
+    [
+      plt_add_apps: [
+        :mix,
+        :ecto,
+        :postgrex,
+        :ex_unit,
+        :phoenix,
+        :phoenix_html,
+        :phoenix_live_view
+      ],
+      plt_core_path: "_build/#{Mix.env()}",
+      flags: [:error_handling, :underspecs, :missing_return]
     ]
   end
 end

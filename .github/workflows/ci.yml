@@ -76,4 +76,6 @@ jobs:
 
       - run: mix test
 
-      # - run: mix dialyzer
+      - run: mix dialyzer
+
+      - run: mix credo --strict

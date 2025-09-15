@@ -118,6 +118,8 @@ defmodule Usher.Web.Router do
 
   import Phoenix.Component, only: [assign: 2, assign: 3]
 
+  alias Usher.Web.Resolver
+
   @default_opts [
     socket_path: "/live",
     transport: :websocket,
@@ -180,8 +182,8 @@ defmodule Usher.Web.Router do
   def __session__(conn, prefix, live_path, live_transport, csp_key, resolver) do
     csp_keys = expand_csp_nonce_keys(csp_key)
 
-    user = Usher.Web.Resolver.call_with_fallback(resolver, :resolve_user, [conn])
-    access = Usher.Web.Resolver.call_with_fallback(resolver, :resolve_access, [user])
+    user = Resolver.call_with_fallback(resolver, :resolve_user, [conn])
+    access = Resolver.call_with_fallback(resolver, :resolve_access, [user])
 
     %{
       "prefix" => prefix,
