@@ -103,7 +103,7 @@ defmodule Usher.Web.MixProject do
 
   defp docs do
     [
-      main: "readme",
+      main: "overview",
       authors: ["Arda Tugay"],
       api_reference: false,
       source_ref: "v#{@version}",
@@ -127,7 +127,6 @@ defmodule Usher.Web.MixProject do
 
   defp docs_guides do
     [
-      "README.md",
       "guides/overview.md",
       "guides/installation.md",
       "guides/getting-started.md",

@@ -82,7 +82,7 @@ defmodule Usher.Web.Router do
 
   - `:on_mount` — A list of additional `on_mount` hooks to run for all Usher
     LiveViews. Usher always prepends `Usher.Web.Authentication` and
-    `Usher.Web.LiveMount`; any hooks you provide are invoked afterwards.
+    Usher.Web.LiveMount; any hooks you provide are invoked afterwards.
 
   ## Authentication & access control
 

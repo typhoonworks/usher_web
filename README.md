@@ -34,7 +34,7 @@ Take a look at the [overview guide](https://hexdocs.pm/usher_web/overview.html) 
 
 ## Contributing
 
-Please see the [contribution guide](CONTRIBUTING.md).
+Please see the [contribution guide](contributing.md).
 
 ## Acknowledgements
 
