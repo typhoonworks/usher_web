@@ -14,6 +14,10 @@ defmodule Usher.Web.MixProject do
       aliases: aliases(),
       deps: deps(),
       docs: docs(),
+      package: package(),
+      description: description(),
+      source_url: @source_url,
+      homepage_url: @source_url,
       dialyzer: dialyzer()
     ]
   end
@@ -108,7 +112,7 @@ defmodule Usher.Web.MixProject do
   defp docs do
     [
       main: "overview",
-      authors: ["Arda Tugay"],
+      authors: ["Arda C. Tugay"],
       logo: "assets/logo.svg",
       api_reference: false,
       source_ref: "v#{@version}",
@@ -153,5 +157,21 @@ defmodule Usher.Web.MixProject do
       plt_core_path: "_build/#{Mix.env()}",
       flags: [:error_handling, :underspecs, :missing_return]
     ]
+  end
+
+  defp package do
+    [
+      name: "usher_web",
+      maintainers: ["Arda C. Tugay"],
+      licenses: ["MIT"],
+      links: %{GitHub: @source_url},
+      files: ~w[lib priv/static* .formatter.exs mix.exs README* LICENSE* licenses/*]
+    ]
+  end
+
+  defp description do
+    """
+    Usher Web is a web interface for the Usher invitation link management library.
+    """
   end
 end
