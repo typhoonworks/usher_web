@@ -12,9 +12,7 @@ defmodule Usher.Web.Helpers.DateTimeHelpersTest do
 
     test "returns 'now' for exact current time" do
       fixed_time = ~U[2025-01-01 12:00:00Z]
-
-      DateTime
-      |> stub(:utc_now, fn -> fixed_time end)
+      DateTime |> stub(:utc_now, fn -> fixed_time end)
 
       result = DateTimeHelpers.time_left_until(fixed_time)
       assert result == "Expired"
@@ -22,9 +20,7 @@ defmodule Usher.Web.Helpers.DateTimeHelpersTest do
 
     test "returns seconds for short durations (1-44 seconds)" do
       fixed_time = ~U[2025-01-01 12:00:00Z]
-
-      DateTime
-      |> stub(:utc_now, fn -> fixed_time end)
+      DateTime |> stub(:utc_now, fn -> fixed_time end)
 
       future_1s = DateTime.add(fixed_time, 1, :second)
       future_30s = DateTime.add(fixed_time, 30, :second)
@@ -35,6 +31,8 @@ defmodule Usher.Web.Helpers.DateTimeHelpersTest do
 
     test "returns 'In a minute' for 45-89 seconds" do
       now = DateTime.utc_now()
+      DateTime |> stub(:utc_now, fn -> now end)
+
       future_45s = DateTime.add(now, 45, :second)
       future_89s = DateTime.add(now, 89, :second)
 
@@ -44,6 +42,7 @@ defmodule Usher.Web.Helpers.DateTimeHelpersTest do
 
     test "returns minutes for 90 seconds to 44 minutes" do
       now = DateTime.utc_now()
+      DateTime |> stub(:utc_now, fn -> now end)
       future_2min = DateTime.add(now, 120, :second)
       future_30min = DateTime.add(now, 30 * 60, :second)
 
@@ -53,6 +52,7 @@ defmodule Usher.Web.Helpers.DateTimeHelpersTest do
 
     test "returns 'In an hour' for 45-89 minutes" do
       now = DateTime.utc_now()
+      DateTime |> stub(:utc_now, fn -> now end)
       future_45min = DateTime.add(now, 45 * 60, :second)
       future_89min = DateTime.add(now, 89 * 60, :second)
 
@@ -62,6 +62,7 @@ defmodule Usher.Web.Helpers.DateTimeHelpersTest do
 
     test "returns hours for 90 minutes to 21 hours" do
       now = DateTime.utc_now()
+      DateTime |> stub(:utc_now, fn -> now end)
       future_2h = DateTime.add(now, 2 * 60 * 60, :second)
       future_12h = DateTime.add(now, 12 * 60 * 60, :second)
 
@@ -71,6 +72,7 @@ defmodule Usher.Web.Helpers.DateTimeHelpersTest do
 
     test "returns 'In a day' for 22-35 hours" do
       now = DateTime.utc_now()
+      DateTime |> stub(:utc_now, fn -> now end)
       future_22h = DateTime.add(now, 22 * 60 * 60, :second)
       future_35h = DateTime.add(now, 35 * 60 * 60, :second)
 
@@ -80,6 +82,7 @@ defmodule Usher.Web.Helpers.DateTimeHelpersTest do
 
     test "returns days for 36 hours to 24 days" do
       now = DateTime.utc_now()
+      DateTime |> stub(:utc_now, fn -> now end)
       future_2d = DateTime.add(now, 2 * 24 * 60 * 60, :second)
       future_15d = DateTime.add(now, 15 * 24 * 60 * 60, :second)
 
@@ -89,6 +92,7 @@ defmodule Usher.Web.Helpers.DateTimeHelpersTest do
 
     test "returns 'In a month' for 25-44 days" do
       now = DateTime.utc_now()
+      DateTime |> stub(:utc_now, fn -> now end)
       future_25d = DateTime.add(now, 25 * 24 * 60 * 60, :second)
       future_44d = DateTime.add(now, 44 * 24 * 60 * 60, :second)
 
@@ -98,6 +102,7 @@ defmodule Usher.Web.Helpers.DateTimeHelpersTest do
 
     test "returns months for 45-344 days" do
       now = DateTime.utc_now()
+      DateTime |> stub(:utc_now, fn -> now end)
       future_60d = DateTime.add(now, 60 * 24 * 60 * 60, :second)
       future_300d = DateTime.add(now, 300 * 24 * 60 * 60, :second)
 
@@ -107,6 +112,7 @@ defmodule Usher.Web.Helpers.DateTimeHelpersTest do
 
     test "returns 'In a year' for 345-544 days" do
       now = DateTime.utc_now()
+      DateTime |> stub(:utc_now, fn -> now end)
       future_345d = DateTime.add(now, 345 * 24 * 60 * 60, :second)
       future_544d = DateTime.add(now, 544 * 24 * 60 * 60, :second)
 
@@ -116,6 +122,7 @@ defmodule Usher.Web.Helpers.DateTimeHelpersTest do
 
     test "returns years for 546+ days" do
       now = DateTime.utc_now()
+      DateTime |> stub(:utc_now, fn -> now end)
       future_2y = DateTime.add(now, 2 * 365 * 24 * 60 * 60, :second)
       future_5y = DateTime.add(now, 5 * 365 * 24 * 60 * 60, :second)
 
