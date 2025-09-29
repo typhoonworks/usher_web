@@ -17,7 +17,7 @@ Add `usher_web` to your list of dependencies in `mix.exs`:
 ```elixir
 def deps do
   [
-    {:usher_web, "~> 1.0.0"}
+    {:usher_web, "~> 1.0.1"}
   ]
 end
 ```
