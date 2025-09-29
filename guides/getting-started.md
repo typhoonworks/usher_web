@@ -12,7 +12,9 @@ Before you begin, make sure you have:
 
 ## Configuration
 
-Usher Web itself doesn't require any configuration. However, you do need to configure the underlying [Usher library](https://hexdocs.pm/usher) that Usher Web depends on.
+### Usher Library Configuration
+
+You need to configure the underlying [Usher library](https://hexdocs.pm/usher) that Usher Web depends on.
 
 Configure Usher in your `config/config.exs` file.
 
@@ -31,6 +33,19 @@ config :usher,
 ```
 
 You can find details about configuration options in [Usher's Configuration guide](https://hexdocs.pm/usher/configuration.html).
+
+### Usher Web Configuration
+
+Usher Web needs its own configuration:
+
+```elixir
+config :usher_web,
+  invitation_redirect_url: "https://myapp.com"
+```
+
+Currently, you can only configure the `:invitation_redirect_url`, which specifies where users will be redirected when they click invitation links. Defaults to `"http://localhost:4000"` if not provided. For example, if you set it to `"https://myapp.com"`, the generated invitation links will look like `https://myapp.com/invitations/abcdef`.
+
+See the [Configuration guide](configuration.md) for more details.
 
 ## Routing to Usher Web Views
 

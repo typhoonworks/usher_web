@@ -47,5 +47,6 @@ _ = Usher.Web.TestRepo.__adapter__().storage_up(Usher.Web.TestRepo.config())
 Ecto.Adapters.SQL.Sandbox.mode(Usher.Web.TestRepo, :manual)
 
 Mimic.copy(DateTime)
+Mimic.copy(Application)
 
 ExUnit.start(assert_receive_timeout: 500, refute_receive_timeout: 50, exclude: [:skip])
