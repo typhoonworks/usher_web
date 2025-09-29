@@ -5,6 +5,7 @@ defmodule Usher.Web.Live.InvitationsList do
 
   alias Usher.Invitation
   alias Usher.Web.Components.InvitationFormComponent
+  alias Usher.Web.Config
 
   import Usher.Web.Helpers.DateTimeHelpers
 
@@ -60,7 +61,7 @@ defmodule Usher.Web.Live.InvitationsList do
                 href={token_link(invitation)}
                 target="_blank"
               >
-                {token_link_display_value(token_link(invitation))}
+                {token_link(invitation) |> token_link_display_value()}
               </.link>
               <.button
                 id={"copy-invitation-token-link-#{id}"}
@@ -269,8 +270,9 @@ defmodule Usher.Web.Live.InvitationsList do
   end
 
   defp token_link(invitation) do
-    # signup_url = app_url("signup")
-    Usher.invitation_url(invitation.token, "http://localhost:4000")
+    invitation_redirect_url = Config.invitation_redirect_url()
+
+    Usher.invitation_url(invitation.token, invitation_redirect_url)
   end
 
   defp token_link_display_value(link) do

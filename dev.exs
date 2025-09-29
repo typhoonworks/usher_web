@@ -112,7 +112,7 @@ Task.async(fn ->
   ]
 
   # Reset the DB
-  :ok = Ecto.Adapters.Postgres.storage_down(Usher.Dev.Repo.config())
+  Ecto.Adapters.Postgres.storage_down(Usher.Dev.Repo.config())
   :ok = Ecto.Adapters.Postgres.storage_up(Usher.Dev.Repo.config())
 
   {:ok, _pid} = Supervisor.start_link(children, strategy: :one_for_one)

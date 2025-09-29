@@ -132,6 +132,7 @@ defmodule Usher.Web.MixProject do
       "guides/overview.md",
       "guides/installation.md",
       "guides/getting-started.md",
+      "guides/configuration.md",
       "guides/contributing.md"
     ]
   end
