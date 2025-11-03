@@ -1,7 +1,7 @@
 defmodule Usher.Web.MixProject do
   use Mix.Project
 
-  @version "1.0.1"
+  @version "1.0.2"
   @source_url "https://github.com/typhoonworks/usher_web"
 
   def project do
@@ -49,7 +49,7 @@ defmodule Usher.Web.MixProject do
 
       # Phoenix
       {:jason, "~> 1.2"},
-      {:phoenix, "~> 1.7.0"},
+      {:phoenix, "~> 1.7"},
       {:phoenix_html, "~> 4.1"},
       {:phoenix_live_view, "~> 1.1"},
       {:phoenix_live_dashboard, "~> 0.8.3"},
